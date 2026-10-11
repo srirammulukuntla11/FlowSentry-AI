@@ -1,0 +1,67 @@
+{
+  "name": "Customer Feedback Notification Flow (Safe Sample)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "feedback-incoming",
+        "responseMode": "onReceived",
+        "responseData": "allEntries"
+      },
+      "id": "node_webhook_trigger_01",
+      "name": "Webhook - Inbound Feedback",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Sanitize and format incoming customer comments\nconst items = $input.all();\nreturn items.map(item => ({\n  json: {\n    sentiment: item.json.rating >= 4 ? 'positive' : 'needs_attention',\n    customerEmail: item.json.email || 'anonymous',\n    comment: (item.json.comment || '').trim().slice(0, 500)\n  }\n}));"
+      },
+      "id": "node_transform_code_02",
+      "name": "Code - Cleanse & Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#product-feedback",
+        "text": "=New customer feedback received. Sentiment: {{$json.sentiment}}"
+      },
+      "id": "node_slack_notify_03",
+      "name": "Slack - Team Channel",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [720, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Inbound Feedback": {
+      "main": [
+        [
+          {
+            "node": "Code - Cleanse & Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Cleanse & Score": {
+      "main": [
+        [
+          {
+            "node": "Slack - Team Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

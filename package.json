@@ -1,0 +1,22 @@
+{
+  "name": "flowsentry-ai",
+  "version": "1.0.0",
+  "description": "FlowSentry AI - Static Security Inspector for n8n Workflows",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "test:backend": "npm --prefix backend test",
+    "start:backend": "npm --prefix backend start"
+  },
+  "keywords": [
+    "n8n",
+    "security",
+    "static-analysis",
+    "gemini",
+    "vortex-2k26"
+  ],
+  "author": "FlowSentry AI Team",
+  "license": "MIT"
+}
