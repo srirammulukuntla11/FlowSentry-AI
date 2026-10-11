@@ -12,7 +12,12 @@ const nodeTypes = {
   customNode: CustomNode
 };
 
-export default function WorkflowGraph({ graphNodes = [], graphEdges = [], highlightedNodeIds = [] }) {
+export default function WorkflowGraph({
+  graphNodes = [],
+  graphEdges = [],
+  highlightedNodeIds = [],
+  onNodeSelect
+}) {
   const highlightedSet = useMemo(() => new Set(highlightedNodeIds), [highlightedNodeIds]);
 
   // Convert normalized backend graph nodes to @xyflow/react format
@@ -50,8 +55,9 @@ export default function WorkflowGraph({ graphNodes = [], graphEdges = [], highli
         target: edge.target,
         animated: isConnectedToHighlight,
         style: {
-          stroke: isConnectedToHighlight ? '#f43f5e' : '#475569',
-          strokeWidth: isConnectedToHighlight ? 3 : 1.5
+          stroke: isConnectedToHighlight ? '#C74747' : '#4F8277',
+          strokeWidth: isConnectedToHighlight ? 2 : 1.5,
+          transition: 'stroke 0.2s ease, stroke-width 0.2s ease'
         }
       };
     });
@@ -63,16 +69,21 @@ export default function WorkflowGraph({ graphNodes = [], graphEdges = [], highli
         nodes={flowNodes}
         edges={flowEdges}
         nodeTypes={nodeTypes}
+        onNodeClick={onNodeSelect ? (_event, node) => onNodeSelect(node.id) : undefined}
         fitView
         fitViewOptions={{ padding: 0.25 }}
         minZoom={0.2}
         maxZoom={2}
       >
-        <Background color="#1e293b" gap={20} size={1} />
-        <Controls style={{ background: '#111827', borderColor: '#374151', fill: '#f3f4f6' }} />
+        <Background color="#D9DEE5" gap={18} size={1} />
+        <Controls
+          className="flow-controls-custom"
+          showInteractive={false}
+        />
         <MiniMap
-          style={{ background: '#0b0f19', border: '1px solid #1e293b' }}
-          nodeColor={(n) => (highlightedSet.has(n.id) ? '#f43f5e' : '#334155')}
+          className="flow-minimap-custom"
+          nodeColor={(n) => (highlightedSet.has(n.id) ? '#C74747' : '#9AAEBD')}
+          maskColor="rgba(236, 234, 228, 0.75)"
         />
       </ReactFlow>
     </div>
