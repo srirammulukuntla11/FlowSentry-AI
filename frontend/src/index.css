@@ -25,6 +25,7 @@
   --bg-navbar: #FFFFFF;              /* Clean white navbar */
   --bg-footer: #ECEAE4;              /* Full-width footer surface */
   --bg-workspace: #FFFFFF;           /* Graph canvas background */
+  --minimap-mask: rgba(236, 234, 228, 0.75); /* React Flow minimap non-visible mask */
 
   /* ======================================================
      2. Brand Colors
@@ -2088,3 +2089,433 @@ body {
     max-width: 260px;
   }
 }
+
+/* ========================================================
+   Navbar Theme Toggle Button
+   ======================================================== */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-standard);
+  background: var(--bg-inset);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  transform: translateY(-0.5px);
+}
+
+.theme-toggle-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ========================================================
+   Dark Mode Theme System ([data-theme="dark"])
+   ======================================================== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* 1. Backgrounds & Surface Hierarchy */
+  --bg-canvas: #0F172A;
+  --bg-page: #0F172A;
+  --bg-panel: #1E293B;
+  --bg-surface: #1E293B;
+  --bg-card: #1E293B;
+  --bg-secondary: #162032;
+  --bg-section-alt: #131C2E;
+  --bg-dark-panel: #0B1120;
+  --bg-elevated: #243048;
+  --bg-hover: #26354D;
+  --bg-inset: #131C2E;
+  --bg-evidence: #0B1120;
+  --bg-upload: #1E293B;
+  --bg-navbar: #162032;
+  --bg-footer: #162032;
+  --bg-workspace: #0F172A;
+  --minimap-mask: rgba(15, 23, 42, 0.75);
+
+  /* 2. Brand Colors */
+  --brand-primary: #38BDF8;
+  --brand-deep: #F1F5F9;
+  --brand-teal: #2DD4BF;
+  --brand-teal-bg: #132D2F;
+  --brand-blue-bg: #17283C;
+
+  /* Interactive aliases */
+  --accent-primary: #38BDF8;
+  --accent-primary-hover: #0EA5E9;
+  --accent-teal: #2DD4BF;
+  --accent-teal-bg: #132D2F;
+  --color-brand-shield-bg: #132D2F;
+
+  /* 3. Typography Colors */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #94A3B8;
+  --text-disabled: #64748B;
+  --text-dim: #334155;
+  --text-on-dark: #F8FAFC;
+
+  /* 4. Borders & Focus Tokens */
+  --border-standard: #334155;
+  --border-main: #334155;
+  --border-subtle: #243247;
+  --border-hover: #475569;
+  --border-active: #38BDF8;
+  --focus-ring: #38BDF8;
+
+  /* 5. Security Severity Colors */
+  --severity-high: #F87171;
+  --severity-high-bg: #3B181E;
+  --severity-high-border: #62232B;
+
+  --severity-medium: #FBBF24;
+  --severity-medium-bg: #382910;
+  --severity-medium-border: #5B4317;
+
+  --severity-low: #34D399;
+  --severity-low-bg: #102F28;
+  --severity-low-border: #1C4D41;
+
+  --severity-info: #A78BFA;
+  --severity-info-bg: #2B1D4B;
+  --severity-info-border: #46307B;
+
+  --severity-safe: #34D399;
+  --severity-safe-bg: #102F28;
+  --severity-safe-border: #1C4D41;
+
+  /* Shadows for Dark Mode */
+  --shadow-resting: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* ========================================================
+   Dark Mode Component Visibility & Contrast Fixes
+   ======================================================== */
+
+/* View Mode Toggle Controls (Split, Graph Focus, Findings Focus) */
+[data-theme="dark"] .view-mode-toggle {
+  background: #111C2E;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .btn-view-mode {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .btn-view-mode:hover {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .btn-view-mode.active {
+  background: #0284C7;
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Filter Pills */
+[data-theme="dark"] .filter-pill {
+  background: var(--bg-inset);
+  border-color: var(--border-standard);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .filter-pill:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .filter-pill.active {
+  background: #0284C7;
+  border-color: #0284C7;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Search Input & Placeholder */
+[data-theme="dark"] .search-input {
+  background: var(--bg-inset);
+  border-color: var(--border-standard);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .search-input::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+[data-theme="dark"] .search-input:focus {
+  background: var(--bg-panel);
+  border-color: var(--border-active);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .search-clear-btn {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .search-clear-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Buttons */
+[data-theme="dark"] .btn-upload-action,
+[data-theme="dark"] .btn-primary {
+  background: #0284C7;
+  color: #FFFFFF;
+  border-color: #0369A1;
+}
+
+[data-theme="dark"] .btn-upload-action:hover,
+[data-theme="dark"] .btn-primary:hover {
+  background: #0369A1;
+}
+
+[data-theme="dark"] .btn-scan-another,
+[data-theme="dark"] .btn-fullscreen-trigger,
+[data-theme="dark"] .btn-panel-fullscreen,
+[data-theme="dark"] .btn-close-fullscreen {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+  color: var(--brand-primary);
+}
+
+[data-theme="dark"] .btn-scan-another:hover,
+[data-theme="dark"] .btn-fullscreen-trigger:hover,
+[data-theme="dark"] .btn-panel-fullscreen:hover,
+[data-theme="dark"] .btn-close-fullscreen:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: #F8FAFC;
+}
+
+/* Finding Cards & Selected State */
+[data-theme="dark"] .finding-card {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .finding-card:hover {
+  border-color: var(--border-hover);
+}
+
+[data-theme="dark"] .finding-card.selected {
+  background: var(--bg-panel);
+  border-color: var(--border-active);
+  box-shadow: 0 0 0 1.5px var(--border-active);
+}
+
+[data-theme="dark"] .selected-indicator {
+  border-color: #1C4D41;
+  color: #34D399;
+  background: #102F28;
+}
+
+/* Rule ID & Chips */
+[data-theme="dark"] .rule-id-badge {
+  background: var(--bg-inset);
+  border-color: var(--border-standard);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .affected-node-chip {
+  background: #17283C;
+  color: #38BDF8;
+  border-color: #243247;
+}
+
+[data-theme="dark"] .filter-badge {
+  background: #17283C;
+  color: #38BDF8;
+  border-color: #243247;
+}
+
+/* Guidance & Evidence Text Contrast */
+[data-theme="dark"] .guidance-block {
+  background: var(--bg-inset);
+  border-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .guidance-text {
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .evidence-code-block {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .evidence-redaction-notice {
+  color: var(--text-muted);
+}
+
+/* AI Advisory Card Contrast */
+[data-theme="dark"] .ai-advisory-card {
+  background: #1E1738;
+  border-color: #4C337B;
+}
+
+[data-theme="dark"] .ai-advisory-title-group {
+  color: #C4B5FD;
+}
+
+[data-theme="dark"] .ai-advisory-provider {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .ai-advisory-summary {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .ai-row-label {
+  color: #C4B5FD;
+}
+
+[data-theme="dark"] .ai-row-value {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .ai-non-authoritative-badge {
+  color: #C4B5FD;
+  background: rgba(196, 181, 253, 0.12);
+  border-color: #4C337B;
+}
+
+/* Limitations Section */
+[data-theme="dark"] .finding-limitations-section {
+  border-top-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .limitations-label {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .limitations-text {
+  color: #94A3B8;
+}
+
+/* Custom Flow Nodes */
+[data-theme="dark"] .custom-flow-node {
+  background: #1E293B;
+  color: #F8FAFC;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .custom-flow-node:hover {
+  border-color: #38BDF8;
+}
+
+[data-theme="dark"] .custom-flow-node.highlighted {
+  background: #2D1B22;
+  border-color: var(--severity-high);
+}
+
+[data-theme="dark"] .node-title {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .node-type-label {
+  color: #2DD4BF;
+}
+
+[data-theme="dark"] .node-badge {
+  background: #131C2E;
+  border-color: #334155;
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .node-icon-wrapper {
+  background: #131C2E;
+  border-color: #243247;
+}
+
+[data-theme="dark"] .node-cred-chip {
+  background: #17283C;
+  color: #38BDF8;
+  border-color: #243247;
+}
+
+/* Graph Canvas & Controls */
+[data-theme="dark"] .graph-viewport,
+[data-theme="dark"] .fullscreen-graph-body {
+  background: var(--bg-canvas);
+}
+
+[data-theme="dark"] .react-flow__controls.flow-controls-custom,
+[data-theme="dark"] .react-flow__minimap.flow-minimap-custom {
+  background: var(--bg-panel) !important;
+  border-color: var(--border-standard) !important;
+}
+
+.react-flow__minimap-mask {
+  fill: var(--minimap-mask, rgba(236, 234, 228, 0.75)) !important;
+}
+
+[data-theme="dark"] .react-flow__controls-button {
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
+  border-bottom-color: var(--border-subtle) !important;
+}
+
+[data-theme="dark"] .react-flow__controls-button:hover {
+  background: var(--bg-hover) !important;
+  color: var(--brand-primary) !important;
+  fill: var(--brand-primary) !important;
+}
+
+/* Samples & Zero Findings */
+[data-theme="dark"] .sample-option.safe:hover {
+  background: #142F24;
+}
+
+[data-theme="dark"] .sample-option.risky:hover {
+  background: #331A1E;
+}
+
+[data-theme="dark"] .summary-card.active-filter {
+  background: var(--bg-hover);
+}
+
+[data-theme="dark"] .zero-findings-card {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .zero-findings-checks {
+  background: var(--bg-inset);
+  border-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .heuristic-check-item {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .hero-eyebrow {
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .upload-icon-wrapper {
+  border-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .brand-shield {
+  border-color: var(--border-standard);
+}
+
+

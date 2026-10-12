@@ -83,7 +83,7 @@ export default function WorkflowGraph({
         <MiniMap
           className="flow-minimap-custom"
           nodeColor={(n) => (highlightedSet.has(n.id) ? '#C74747' : '#9AAEBD')}
-          maskColor="rgba(236, 234, 228, 0.75)"
+          maskColor="var(--minimap-mask, rgba(236, 234, 228, 0.75))"
         />
       </ReactFlow>
     </div>

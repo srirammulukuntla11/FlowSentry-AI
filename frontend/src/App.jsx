@@ -20,6 +20,25 @@ export default function App() {
   const [viewMode, setViewMode] = useState('split'); // 'split' | 'graph' | 'findings'
   const [isFullScreenGraph, setIsFullScreenGraph] = useState(false);
 
+  // Theme state persisted in localStorage
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('flowsentry-theme') === 'dark';
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('flowsentry-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('flowsentry-theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const handleToggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
   // Handle Escape key & body scroll lock for Full Screen Graph overlay
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -207,7 +226,11 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Navbar onReset={handleReset} />
+      <Navbar
+        onReset={handleReset}
+        isDarkMode={isDarkMode}
+        onToggleTheme={handleToggleTheme}
+      />
 
       <main className="main-content">
         {/* Upload Dropzone (visible when not viewing results) */}
