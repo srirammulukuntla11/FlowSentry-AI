@@ -4,6 +4,7 @@ import UploadDropzone from './components/UploadDropzone.jsx';
 import SeveritySummary from './components/SeveritySummary.jsx';
 import WorkflowGraph from './components/WorkflowGraph.jsx';
 import FindingsList from './components/FindingsList.jsx';
+import ExportDropdown from './components/ExportDropdown.jsx';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -338,6 +339,10 @@ export default function App() {
                   <span className="meta-info-label">Total Findings:</span>
                   <strong className="meta-info-value">{scanResult.summary?.total ?? 0}</strong>
                 </button>
+                <ExportDropdown
+                  scanResult={scanResult}
+                  nodeLookup={nodeLookup}
+                />
               </div>
             </section>
 

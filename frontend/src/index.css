@@ -2518,4 +2518,236 @@ body {
   border-color: var(--border-standard);
 }
 
+/* ========================================================
+   Export Report Dropdown & Menu
+   ======================================================== */
+
+.export-dropdown-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-export-report {
+  height: 32px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-sm);
+  color: var(--brand-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-size-label);
+  font-weight: 600;
+  padding: 0 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-export-report:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-hover);
+}
+
+.btn-export-report.active {
+  background: var(--brand-blue-bg);
+  border-color: var(--border-active);
+  color: var(--brand-primary);
+}
+
+.btn-export-report:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.export-chevron {
+  transition: transform var(--transition-fast);
+  color: var(--text-muted);
+}
+
+.export-chevron.open {
+  transform: rotate(180deg);
+}
+
+.export-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border-standard);
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  display: inline-block;
+}
+
+.export-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 280px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  padding: 0.45rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  animation: dropdownFadeIn 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.export-dropdown-header {
+  padding: 0.35rem 0.55rem 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.2rem;
+}
+
+.export-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--transition-fast);
+  width: 100%;
+}
+
+.export-menu-item:hover {
+  background: var(--bg-hover);
+}
+
+.export-menu-item:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -1px;
+}
+
+.export-menu-item:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.export-item-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.export-item-icon.pdf {
+  background: var(--severity-high-bg);
+  color: var(--severity-high);
+  border: 1px solid var(--severity-high-border);
+}
+
+.export-item-icon.json {
+  background: var(--brand-blue-bg);
+  color: var(--brand-primary);
+  border: 1px solid #D2DFEE;
+}
+
+.export-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.export-item-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-size-desc);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.export-item-desc {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.25;
+}
+
+.export-error-toast {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 290px;
+  padding: 0.55rem 0.8rem;
+  background: var(--severity-high-bg);
+  border: 1px solid var(--severity-high-border);
+  color: var(--severity-high);
+  border-radius: var(--radius-md);
+  font-size: var(--text-size-label);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  z-index: 102;
+  box-shadow: var(--shadow-modal);
+}
+
+.export-error-close {
+  background: transparent;
+  border: none;
+  color: var(--severity-high);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0.2rem;
+}
+
+/* Export Dropdown Dark Mode Overrides */
+[data-theme="dark"] .btn-export-report {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+  color: var(--brand-primary);
+}
+
+[data-theme="dark"] .btn-export-report:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .btn-export-report.active {
+  background: var(--bg-hover);
+  border-color: var(--border-active);
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .export-dropdown-menu {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .export-item-icon.json {
+  background: #17283C;
+  color: #38BDF8;
+  border-color: #243247;
+}
+
+
 
