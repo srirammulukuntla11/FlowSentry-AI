@@ -581,31 +581,37 @@ body {
   margin-top: auto;
   flex-shrink: 0;
   box-shadow: 0 -1px 3px rgba(34, 43, 58, 0.03);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .homepage-footer-inner {
-  max-width: 1440px;
   width: 100%;
-  margin: 0 auto;
   padding: 0.85rem 1.5rem;
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  justify-content: center;
+  gap: 0.65rem;
   font-size: var(--text-size-label);
+  text-align: center;
 }
 
 .privacy-icon {
-  color: var(--brand-teal);
-  display: flex;
+  color: var(--brand-primary);
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
 .privacy-content {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+  text-align: center;
 }
 
 .privacy-title {
@@ -620,7 +626,7 @@ body {
   line-height: var(--line-height-normal);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .hero-headline {
     font-size: 1.75rem;
   }
@@ -632,12 +638,24 @@ body {
     gap: 0.75rem;
   }
   .homepage-footer-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3rem;
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+  }
+  .privacy-content {
+    justify-content: center;
+    text-align: center;
+    gap: 0.35rem;
   }
   .privacy-title {
     white-space: normal;
+    text-align: center;
+  }
+  .privacy-details {
+    text-align: center;
   }
 }
 
