@@ -2,21 +2,35 @@ import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 
 export default function CustomNode({ data }) {
-  const isHighlighted = Boolean(data.isHighlighted);
+  const riskSeverity = data.riskSeverity || null; // 'high' | 'medium' | 'low' | 'info' | null
+  const isSelected = Boolean(data.isSelected);
+  const findingsCount = data.findingsCount || 0;
+  const ruleIds = data.ruleIds || [];
+
+  // Determine handle color matching the node's risk severity
+  const handleColor = riskSeverity === 'high'
+    ? 'var(--severity-high, #EF4444)'
+    : riskSeverity === 'medium'
+      ? 'var(--severity-medium, #F59E0B)'
+      : riskSeverity === 'low'
+        ? 'var(--severity-low, #0284C7)'
+        : riskSeverity === 'info'
+          ? 'var(--severity-info, #6366F1)'
+          : 'var(--brand-primary, #5145E5)';
 
   // Return a sleek, lightweight SVG icon tailored to the node category
   const renderNodeIcon = (type = '') => {
     const t = type.toLowerCase();
     if (t.includes('webhook')) {
       return (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary, #344766)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
         </svg>
       );
     }
     if (t.includes('code')) {
       return (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--brand-teal, #4F8277)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <polyline points="16 18 22 12 16 6" />
           <polyline points="8 6 2 12 8 18" />
         </svg>
@@ -24,7 +38,7 @@ export default function CustomNode({ data }) {
     }
     if (t.includes('http')) {
       return (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary, #344766)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />
           <line x1="2" y1="12" x2="22" y2="12" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -33,7 +47,7 @@ export default function CustomNode({ data }) {
     }
     if (t.includes('postgres') || t.includes('mysql') || t.includes('mongo') || t.includes('db')) {
       return (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--severity-info, #6D61A8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <ellipse cx="12" cy="5" rx="9" ry="3" />
           <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
           <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
@@ -42,21 +56,21 @@ export default function CustomNode({ data }) {
     }
     if (t.includes('slack') || t.includes('discord') || t.includes('email') || t.includes('chat')) {
       return (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--severity-safe, #367A53)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
       );
     }
     if (t.includes('cron') || t.includes('schedule') || t.includes('interval')) {
       return (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--severity-medium, #B77924)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
         </svg>
       );
     }
     return (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted, #778191)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="m7.5 4.27 9 5.15" />
         <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
         <path d="m3.3 7 8.7 5 8.7-5" />
@@ -69,12 +83,15 @@ export default function CustomNode({ data }) {
     .replace('n8n-nodes-base.', '')
     .replace('@n8n/n8n-nodes-langchain.', 'langchain:');
 
+  const riskClass = riskSeverity ? `risk-${riskSeverity}` : 'risk-none';
+  const selectedClass = isSelected ? 'is-selected' : '';
+
   return (
     <div
-      className={`custom-flow-node ${isHighlighted ? 'highlighted' : ''}`}
+      className={`custom-flow-node ${riskClass} ${selectedClass}`}
       tabIndex={0}
       role="group"
-      aria-label={`Node: ${data.label || 'Unnamed'}, Type: ${shortType}`}
+      aria-label={`Node: ${data.label || 'Unnamed'}, Type: ${shortType}, Security Status: ${riskSeverity ? `${riskSeverity.toUpperCase()} Risk (${findingsCount} finding${findingsCount === 1 ? '' : 's'})` : 'No Associated Findings'}`}
     >
       {/* Target input handle on left */}
       <Handle
@@ -82,26 +99,42 @@ export default function CustomNode({ data }) {
         position={Position.Left}
         className="flow-handle input-handle"
         style={{
-          background: isHighlighted ? 'var(--severity-high)' : 'var(--brand-primary)',
+          background: handleColor,
           width: 8,
           height: 8,
           border: '2px solid var(--bg-panel, #FFFFFF)',
-          boxShadow: 'none'
+          boxShadow: isSelected ? `0 0 0 2px ${handleColor}` : 'none'
         }}
       />
 
       <div className="node-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-          <span className="node-icon-wrapper">
+        <div className="node-header-left">
+          <span className="node-icon-wrapper" style={{ color: handleColor }}>
             {renderNodeIcon(data.nodeType)}
           </span>
           <span className="node-badge">v{data.typeVersion || 1}</span>
         </div>
-        {isHighlighted && (
-          <span className="node-risk-indicator" title="Connected to active security finding">
-            FLAGGED
-          </span>
-        )}
+
+        <div className="node-header-right">
+          {riskSeverity && (
+            <span
+              className={`node-risk-pill pill-${riskSeverity}`}
+              title={`${riskSeverity.toUpperCase()} RISK: ${findingsCount} finding${findingsCount === 1 ? '' : 's'}${ruleIds.length > 0 ? ` (${ruleIds.join(', ')})` : ''}`}
+            >
+              <span className="risk-pill-dot" aria-hidden="true" />
+              <span className="risk-pill-label">{riskSeverity.toUpperCase()}</span>
+              {findingsCount > 1 && (
+                <span className="risk-pill-count">({findingsCount})</span>
+              )}
+            </span>
+          )}
+
+          {isSelected && (
+            <span className="node-selected-indicator" title="Currently selected node">
+              SELECTED
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="node-title" title={data.label}>
@@ -113,7 +146,7 @@ export default function CustomNode({ data }) {
       </div>
 
       {data.credentialTypes && data.credentialTypes.length > 0 && (
-        <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+        <div style={{ marginTop: '0.45rem', display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
           {data.credentialTypes.map((c, i) => (
             <span
               key={i}
@@ -137,11 +170,11 @@ export default function CustomNode({ data }) {
         position={Position.Right}
         className="flow-handle output-handle"
         style={{
-          background: isHighlighted ? 'var(--severity-high)' : 'var(--brand-primary)',
+          background: handleColor,
           width: 8,
           height: 8,
           border: '2px solid var(--bg-panel, #FFFFFF)',
-          boxShadow: 'none'
+          boxShadow: isSelected ? `0 0 0 2px ${handleColor}` : 'none'
         }}
       />
     </div>

@@ -20,6 +20,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('split'); // 'split' | 'graph' | 'findings'
   const [isFullScreenGraph, setIsFullScreenGraph] = useState(false);
+  const [selectedNodeId, setSelectedNodeId] = useState(null);
 
   // Theme state persisted in localStorage
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -71,11 +72,16 @@ export default function App() {
     return map;
   }, [scanResult]);
 
-  // Highlighted node IDs derived from currently selected finding
+  // Highlighted node IDs derived from currently selected finding or clicked node
   const highlightedNodeIds = useMemo(() => {
-    if (!selectedFinding) return [];
-    return selectedFinding.affectedNodeIds || [];
-  }, [selectedFinding]);
+    if (selectedFinding?.affectedNodeIds && selectedFinding.affectedNodeIds.length > 0) {
+      return selectedFinding.affectedNodeIds;
+    }
+    if (selectedNodeId) {
+      return [selectedNodeId];
+    }
+    return [];
+  }, [selectedFinding, selectedNodeId]);
 
   // Filtered findings derived from in-memory search and severity filter
   const filteredFindings = useMemo(() => {
@@ -115,6 +121,7 @@ export default function App() {
     setLoadingStep('Uploading and safely parsing workflow...');
     setError(null);
     setSelectedFinding(null);
+    setSelectedNodeId(null);
     setSeverityFilter('all');
     setSearchQuery('');
     setIsFullScreenGraph(false);
@@ -171,6 +178,7 @@ export default function App() {
     setScanResult(null);
     setError(null);
     setSelectedFinding(null);
+    setSelectedNodeId(null);
     setSeverityFilter('all');
     setSearchQuery('');
     setViewMode('split');
@@ -183,12 +191,19 @@ export default function App() {
   };
 
   const handleNodeSelect = (nodeId) => {
+    setSelectedNodeId(nodeId);
     if (!scanResult?.findings) return;
-    const matchingFinding = scanResult.findings.find((f) =>
+
+    // Find all findings affecting this node
+    const matching = scanResult.findings.filter((f) =>
       f.affectedNodeIds?.includes(nodeId)
     );
-    if (matchingFinding) {
-      setSelectedFinding(matchingFinding);
+
+    if (matching.length > 0) {
+      // Pick finding with highest severity precedence: high -> medium -> low -> info
+      const rank = { high: 4, medium: 3, low: 2, info: 1 };
+      matching.sort((a, b) => (rank[b.severity?.toLowerCase()] || 0) - (rank[a.severity?.toLowerCase()] || 0));
+      setSelectedFinding(matching[0]);
     }
   };
 
@@ -276,75 +291,124 @@ export default function App() {
         {/* Scan Results Dashboard */}
         {scanResult && !isLoading && (
           <div className="results-dashboard-container">
-            {/* 1. Compact Navigation & Workflow Summary Section */}
-            <section className="workflow-summary-section" aria-label="Workflow Summary">
-              <div className="workflow-summary-left">
-                <button
-                  type="button"
-                  className="btn-scan-another"
-                  onClick={handleReset}
-                  aria-label="Scan Another Workflow"
-                >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <line x1="19" y1="12" x2="5" y2="12" />
-                    <polyline points="12 19 5 12 12 5" />
-                  </svg>
-                  <span>Scan Another Workflow</span>
-                </button>
+            {/* 1. Reorganized Scan Summary Header */}
+            {(() => {
+              const rawWorkflowName = scanResult.workflow?.name || 'Workflow Scan Report';
+              const isSafeSample = rawWorkflowName.includes('Safe Sample') || (scanResult.summary?.total === 0);
+              const isRiskySample = rawWorkflowName.includes('Risky Sample') || (scanResult.summary?.high > 0);
+              const cleanWorkflowName = rawWorkflowName
+                .replace(/\s*\(Safe Sample\)\s*/gi, '')
+                .replace(/\s*\(Risky Sample\)\s*/gi, '')
+                .trim();
 
-                <div className="workflow-details-group">
-                  <h1 className="workflow-title" title={scanResult.workflow?.name || 'Workflow Scan Report'}>
-                    {scanResult.workflow?.name || 'Workflow Scan Report'}
-                  </h1>
-                  <div className="workflow-meta-chips">
-                    <span className="meta-chip">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
-                        <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
-                        <line x1="6" y1="6" x2="6.01" y2="6" />
-                        <line x1="6" y1="18" x2="6.01" y2="18" />
+              return (
+                <section className="workflow-summary-section" aria-label="Workflow Summary">
+                  {/* Top utility row: Back navigation + Actions & Metadata */}
+                  <div className="workflow-summary-top-bar">
+                    <button
+                      type="button"
+                      className="btn-scan-another"
+                      onClick={handleReset}
+                      aria-label="Scan Another Workflow"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
                       </svg>
-                      Nodes: <strong>{scanResult.workflow?.nodeCount ?? 0}</strong>
-                    </span>
-                    <span className="meta-chip-sep">•</span>
-                    <span className="meta-chip">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                        <polyline points="12 5 19 12 12 19" />
-                      </svg>
-                      Edges: <strong>{scanResult.workflow?.edgeCount ?? 0}</strong>
-                    </span>
-                    <span className="meta-chip-sep">•</span>
-                    <span className="meta-chip">
-                      <span className={`status-indicator-dot ${scanResult.workflow?.active ? 'active' : 'inactive'}`} />
-                      Status: <strong className={scanResult.workflow?.active ? 'status-text-active' : 'status-text-inactive'}>{scanResult.workflow?.active ? 'Active' : 'Draft / Inactive'}</strong>
-                    </span>
+                      <span>Scan Another Workflow</span>
+                    </button>
+
+                    <div className="workflow-summary-actions">
+                      <div className="meta-info-badge scan-id" title={`Scan ID: ${scanResult.scanId}`}>
+                        <span className="meta-info-label">Scan ID:</span>
+                        <span className="meta-info-value">{scanResult.scanId}</span>
+                      </div>
+
+                      {renderAiBadge(scanResult.aiStatus)}
+
+                      <button
+                        type="button"
+                        className={`meta-info-badge total-findings ${severityFilter === 'all' ? 'active' : ''}`}
+                        onClick={() => setSeverityFilter('all')}
+                        title="Click to reset filters and view all findings"
+                        aria-label={`Total Findings: ${scanResult.summary?.total ?? 0}`}
+                      >
+                        <span className="meta-info-label">Total Findings:</span>
+                        <strong className="meta-info-value">{scanResult.summary?.total ?? 0}</strong>
+                      </button>
+
+                      <ExportDropdown
+                        scanResult={scanResult}
+                        nodeLookup={nodeLookup}
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              <div className="workflow-summary-right">
-                <div className="meta-info-badge scan-id" title={`Scan ID: ${scanResult.scanId}`}>
-                  <span className="meta-info-label">Scan ID:</span>
-                  <span className="meta-info-value">{scanResult.scanId}</span>
-                </div>
-                {renderAiBadge(scanResult.aiStatus)}
-                <button
-                  type="button"
-                  className={`meta-info-badge total-findings ${severityFilter === 'all' ? 'active' : ''}`}
-                  onClick={() => setSeverityFilter('all')}
-                  title="Click to reset filters and view all findings"
-                  aria-label={`Total Findings: ${scanResult.summary?.total ?? 0}`}
-                >
-                  <span className="meta-info-label">Total Findings:</span>
-                  <strong className="meta-info-value">{scanResult.summary?.total ?? 0}</strong>
-                </button>
-                <ExportDropdown
-                  scanResult={scanResult}
-                  nodeLookup={nodeLookup}
-                />
-              </div>
-            </section>
+                  {/* Main header row: Workflow Title + Sample Pill + Topology Chips */}
+                  <div className="workflow-summary-main-row">
+                    <div className="workflow-title-wrap">
+                      <div className="workflow-title-row">
+                        <h1 className="workflow-title" title={rawWorkflowName}>
+                          {cleanWorkflowName}
+                        </h1>
+
+                        {isSafeSample && (
+                          <span className="sample-designation-badge safe" title="Standard Safe Sample Fixture">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                              <polyline points="9 12 11 14 15 10" />
+                            </svg>
+                            <span>Safe Sample</span>
+                          </span>
+                        )}
+
+                        {isRiskySample && (
+                          <span className="sample-designation-badge risky" title="Security Risk Test Fixture">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                              <line x1="12" y1="9" x2="12" y2="13" />
+                              <line x1="12" y1="17" x2="12.01" y2="17" />
+                            </svg>
+                            <span>Risky Sample</span>
+                          </span>
+                        )}
+
+                        {!isSafeSample && !isRiskySample && (
+                          <span className="sample-designation-badge custom" title="User Uploaded Workflow">
+                            <span>Uploaded Workflow</span>
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="workflow-meta-chips">
+                        <span className="meta-chip">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+                            <line x1="6" y1="6" x2="6.01" y2="6" />
+                            <line x1="6" y1="18" x2="6.01" y2="18" />
+                          </svg>
+                          <span>Nodes: <strong>{scanResult.workflow?.nodeCount ?? 0}</strong></span>
+                        </span>
+                        <span className="meta-chip-sep" aria-hidden="true">•</span>
+                        <span className="meta-chip">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                          </svg>
+                          <span>Edges: <strong>{scanResult.workflow?.edgeCount ?? 0}</strong></span>
+                        </span>
+                        <span className="meta-chip-sep" aria-hidden="true">•</span>
+                        <span className="meta-chip status-chip">
+                          <span className={`status-indicator-dot ${scanResult.workflow?.active ? 'active' : 'inactive'}`} aria-hidden="true" />
+                          <span>Status: <strong className={scanResult.workflow?.active ? 'status-text-active' : 'status-text-inactive'}>{scanResult.workflow?.active ? 'Active' : 'Draft / Inactive'}</strong></span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              );
+            })()}
 
             {/* 2. Risk Summary Cards in Single Row */}
             <SeveritySummary
@@ -367,7 +431,7 @@ export default function App() {
               </div>
             )}
 
-            {/* 3. Organized Search, Severity Filter & View Mode Toolbar */}
+            {/* 3. Unified Dashboard Toolbar */}
             <div className="dashboard-toolbar">
               <div className="toolbar-left-group">
                 {/* Search Bar */}
@@ -397,42 +461,51 @@ export default function App() {
                   )}
                 </div>
 
-                {/* Quick Severity Filter Pills */}
+                {/* Severity Filter Pills with Count Badges */}
                 <div className="filter-pills-bar" role="group" aria-label="Severity Filters">
                   <button
                     type="button"
                     className={`filter-pill ${severityFilter === 'all' ? 'active' : ''}`}
                     onClick={() => setSeverityFilter('all')}
                   >
-                    All ({scanResult.findings.length})
+                    <span>All</span>
+                    <span className="pill-count">{scanResult.findings.length}</span>
                   </button>
                   <button
                     type="button"
                     className={`filter-pill high ${severityFilter === 'high' ? 'active' : ''}`}
                     onClick={() => setSeverityFilter(severityFilter === 'high' ? 'all' : 'high')}
                   >
-                    High ({scanResult.summary.high || 0})
+                    <span className="severity-dot" aria-hidden="true" />
+                    <span>High</span>
+                    <span className="pill-count">{scanResult.summary.high || 0}</span>
                   </button>
                   <button
                     type="button"
                     className={`filter-pill medium ${severityFilter === 'medium' ? 'active' : ''}`}
                     onClick={() => setSeverityFilter(severityFilter === 'medium' ? 'all' : 'medium')}
                   >
-                    Medium ({scanResult.summary.medium || 0})
+                    <span className="severity-dot" aria-hidden="true" />
+                    <span>Medium</span>
+                    <span className="pill-count">{scanResult.summary.medium || 0}</span>
                   </button>
                   <button
                     type="button"
                     className={`filter-pill low ${severityFilter === 'low' ? 'active' : ''}`}
                     onClick={() => setSeverityFilter(severityFilter === 'low' ? 'all' : 'low')}
                   >
-                    Low ({scanResult.summary.low || 0})
+                    <span className="severity-dot" aria-hidden="true" />
+                    <span>Low</span>
+                    <span className="pill-count">{scanResult.summary.low || 0}</span>
                   </button>
                   <button
                     type="button"
                     className={`filter-pill info ${severityFilter === 'info' ? 'active' : ''}`}
                     onClick={() => setSeverityFilter(severityFilter === 'info' ? 'all' : 'info')}
                   >
-                    Info ({scanResult.summary.info || 0})
+                    <span className="severity-dot" aria-hidden="true" />
+                    <span>Info</span>
+                    <span className="pill-count">{scanResult.summary.info || 0}</span>
                   </button>
                 </div>
               </div>
@@ -452,7 +525,7 @@ export default function App() {
                       <rect x="3" y="3" width="8" height="18" rx="1" />
                       <rect x="13" y="3" width="8" height="18" rx="1" />
                     </svg>
-                    Split
+                    <span>Split</span>
                   </button>
                   <button
                     type="button"
@@ -469,7 +542,7 @@ export default function App() {
                       <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
                       <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                     </svg>
-                    Graph Focus
+                    <span>Graph Focus</span>
                   </button>
                   <button
                     type="button"
@@ -485,7 +558,7 @@ export default function App() {
                       <line x1="16" y1="13" x2="8" y2="13" />
                       <line x1="16" y1="17" x2="8" y2="17" />
                     </svg>
-                    Findings Focus
+                    <span>Findings Focus</span>
                   </button>
                 </div>
 
@@ -512,7 +585,7 @@ export default function App() {
             <div className={`dashboard-grid view-${viewMode}`}>
               {/* Left Panel: Workflow Topology Graph */}
               <div className={`panel-card graph-panel ${viewMode === 'graph' ? 'featured' : ''}`}>
-                <div className="panel-header">
+                <div className="panel-header graph-panel-header">
                   <div className="panel-title">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--accent-primary)' }}>
                       <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
@@ -521,6 +594,27 @@ export default function App() {
                     </svg>
                     <span>Workflow Topology Graph</span>
                   </div>
+
+                  {/* Compact Risk-Level Legend */}
+                  <div className="graph-severity-legend" aria-label="Risk color legend">
+                    <span className="legend-item high" title="High Risk Policy Violation">
+                      <span className="legend-dot" aria-hidden="true" />
+                      <span>High</span>
+                    </span>
+                    <span className="legend-item medium" title="Medium Risk Warning">
+                      <span className="legend-dot" aria-hidden="true" />
+                      <span>Med</span>
+                    </span>
+                    <span className="legend-item low" title="Low Risk / Audit Review">
+                      <span className="legend-dot" aria-hidden="true" />
+                      <span>Low</span>
+                    </span>
+                    <span className="legend-item info" title="Informational Finding">
+                      <span className="legend-dot" aria-hidden="true" />
+                      <span>Info</span>
+                    </span>
+                  </div>
+
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <div className="panel-meta">
                       {highlightedNodeIds.length > 0
@@ -548,6 +642,7 @@ export default function App() {
                 <WorkflowGraph
                   graphNodes={scanResult.graph.nodes}
                   graphEdges={scanResult.graph.edges}
+                  findings={scanResult.findings}
                   highlightedNodeIds={highlightedNodeIds}
                   onNodeSelect={handleNodeSelect}
                 />
@@ -614,6 +709,26 @@ export default function App() {
             </div>
 
             <div className="fullscreen-graph-actions">
+              {/* Compact Risk-Level Legend */}
+              <div className="graph-severity-legend" aria-label="Risk color legend">
+                <span className="legend-item high" title="High Risk Policy Violation">
+                  <span className="legend-dot" aria-hidden="true" />
+                  <span>High</span>
+                </span>
+                <span className="legend-item medium" title="Medium Risk Warning">
+                  <span className="legend-dot" aria-hidden="true" />
+                  <span>Med</span>
+                </span>
+                <span className="legend-item low" title="Low Risk / Audit Review">
+                  <span className="legend-dot" aria-hidden="true" />
+                  <span>Low</span>
+                </span>
+                <span className="legend-item info" title="Informational Finding">
+                  <span className="legend-dot" aria-hidden="true" />
+                  <span>Info</span>
+                </span>
+              </div>
+
               <button
                 type="button"
                 className="btn-close-fullscreen"
@@ -637,6 +752,7 @@ export default function App() {
             <WorkflowGraph
               graphNodes={scanResult.graph.nodes}
               graphEdges={scanResult.graph.edges}
+              findings={scanResult.findings}
               highlightedNodeIds={highlightedNodeIds}
               onNodeSelect={handleNodeSelect}
             />
