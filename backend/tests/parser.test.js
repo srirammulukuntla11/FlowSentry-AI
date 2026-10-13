@@ -236,3 +236,119 @@ test('HTTP: POST /api/scans rejects empty file (0 bytes)', async () => {
     server.close();
   }
 });
+
+test('NORMALIZATION: Missing node IDs preserve connections between nodes', () => {
+  const workflowWithoutIds = {
+    name: 'Workflow Missing IDs',
+    nodes: [
+      { name: 'Source Webhook', type: 'n8n-nodes-base.webhook', position: [100, 200] },
+      { name: 'Target HTTP', type: 'n8n-nodes-base.httpRequest', position: [300, 200] }
+    ],
+    connections: {
+      'Source Webhook': {
+        main: [
+          [{ node: 'Target HTTP', type: 'main', index: 0 }]
+        ]
+      }
+    }
+  };
+
+  const parsed = parseWorkflowJson(JSON.stringify(workflowWithoutIds));
+  assert.equal(parsed.nodes.length, 2);
+  assert.ok(parsed.nodes[0].id.startsWith('node_0_'));
+  assert.ok(parsed.nodes[1].id.startsWith('node_1_'));
+
+  const graph = normalizeWorkflowGraph(parsed.nodes, parsed.connections);
+  assert.equal(graph.graphNodes.length, 2);
+  assert.equal(graph.graphEdges.length, 1);
+  assert.equal(graph.graphEdges[0].source, parsed.nodes[0].id);
+  assert.equal(graph.graphEdges[0].target, parsed.nodes[1].id);
+  assert.deepEqual(graph.adjacencyList[parsed.nodes[0].id], [parsed.nodes[1].id]);
+});
+
+test('NORMALIZATION: Duplicate node IDs are deduplicated without breaking connections', () => {
+  const workflowWithDupIds = {
+    name: 'Workflow Duplicate IDs',
+    nodes: [
+      { id: 'shared_id', name: 'Producer Node', type: 'n8n-nodes-base.webhook', position: [0, 0] },
+      { id: 'shared_id', name: 'Consumer Node', type: 'n8n-nodes-base.httpRequest', position: [200, 0] }
+    ],
+    connections: {
+      'Producer Node': {
+        main: [
+          [{ node: 'Consumer Node', type: 'main', index: 0 }]
+        ]
+      }
+    }
+  };
+
+  const parsed = parseWorkflowJson(JSON.stringify(workflowWithDupIds));
+  assert.equal(parsed.nodes.length, 2);
+  assert.equal(parsed.nodes[0].id, 'shared_id');
+  assert.equal(parsed.nodes[1].id, 'shared_id_dup_1');
+
+  const graph = normalizeWorkflowGraph(parsed.nodes, parsed.connections);
+  assert.equal(graph.graphNodes.length, 2);
+  assert.equal(graph.graphEdges.length, 1);
+  assert.equal(graph.graphEdges[0].source, 'shared_id');
+  assert.equal(graph.graphEdges[0].target, 'shared_id_dup_1');
+  assert.deepEqual(graph.adjacencyList['shared_id'], ['shared_id_dup_1']);
+});
+
+test('NORMALIZATION: Security scan analyzes original uploaded node parameters faithfully', async () => {
+  const server = app.listen(0);
+  const port = server.address().port;
+
+  try {
+    const customWorkflow = {
+      name: 'Custom User Workflow',
+      nodes: [
+        {
+          id: 'custom_1',
+          name: 'My Webhook',
+          type: 'n8n-nodes-base.webhook',
+          position: [0, 0]
+        },
+        {
+          id: 'custom_2',
+          name: 'My Sender',
+          type: 'n8n-nodes-base.httpRequest',
+          position: [200, 0],
+          parameters: {
+            url: 'http://insecure-api.internal.corp/data',
+            headerParameters: {
+              parameters: [{ name: 'Authorization', value: 'Bearer test_dummy_secret_value_12345' }]
+            }
+          }
+        }
+      ],
+      connections: {
+        'My Webhook': {
+          main: [[{ node: 'My Sender', type: 'main', index: 0 }]]
+        }
+      }
+    };
+
+    const formData = new FormData();
+    formData.append('workflow', new Blob([JSON.stringify(customWorkflow)], { type: 'application/json' }), 'custom.json');
+
+    const res = await fetch(`http://localhost:${port}/api/scans`, {
+      method: 'POST',
+      body: formData
+    });
+
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.equal(body.workflow.name, 'Custom User Workflow');
+    assert.equal(body.workflow.nodeCount, 2);
+    assert.equal(body.workflow.edgeCount, 1);
+    
+    // Confirms finding was detected on custom_2 with exact secret redacted
+    assert.ok(body.findings.some(f => f.ruleId === 'SECRET_LIKE_VALUE' && f.affectedNodeIds.includes('custom_2')));
+    // Confirms riskScore calculated deterministically
+    assert.ok(body.riskScore.score > 0);
+  } finally {
+    server.close();
+  }
+});

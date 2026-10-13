@@ -5,6 +5,8 @@ import SeveritySummary from './components/SeveritySummary.jsx';
 import WorkflowGraph from './components/WorkflowGraph.jsx';
 import FindingsList from './components/FindingsList.jsx';
 import ExportDropdown from './components/ExportDropdown.jsx';
+import ValidationPrecheckModal from './components/ValidationPrecheckModal.jsx';
+import { calculateRiskScore } from './utils/riskScore.js';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -14,6 +16,12 @@ export default function App() {
   const [loadingStep, setLoadingStep] = useState('');
   const [error, setError] = useState(null);
   const [selectedFinding, setSelectedFinding] = useState(null);
+
+  // Workflow Validation Pre-check state
+  const [validationResult, setValidationResult] = useState(null);
+  const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
+  const [pendingFile, setPendingFile] = useState(null);
+  const [isValidating, setIsValidating] = useState(false);
 
   // Stage 5 & 6 interactive filters, view modes, and full screen graph state
   const [severityFilter, setSeverityFilter] = useState('all');
@@ -116,6 +124,45 @@ export default function App() {
     });
   }, [scanResult, severityFilter, searchQuery, nodeLookup]);
 
+  // Trigger pre-check validation on chosen workflow file
+  const handleFileSelected = async (file) => {
+    setError(null);
+    setIsValidating(true);
+    setPendingFile(file);
+
+    const formData = new FormData();
+    formData.append('workflow', file, file.name);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/validate`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error?.message || `Validation failed with status ${response.status}`);
+      }
+
+      setValidationResult(data);
+      setIsValidationModalOpen(true);
+    } catch (err) {
+      console.error('[Validation Error]', err);
+      setError({
+        code: 'VALIDATION_FAILED',
+        message: err.message || 'Could not validate workflow file.'
+      });
+    } finally {
+      setIsValidating(false);
+    }
+  };
+
+  const handleProceedToScan = async () => {
+    if (!pendingFile) return;
+    setIsValidationModalOpen(false);
+    await handleUpload(pendingFile);
+  };
+
   const handleUpload = async (file) => {
     setIsLoading(true);
     setLoadingStep('Uploading and safely parsing workflow...');
@@ -143,6 +190,9 @@ export default function App() {
       }
 
       setScanResult(data);
+      if (data.validation) {
+        setValidationResult(data.validation);
+      }
     } catch (err) {
       console.error('[Upload Error]', err);
       setError({
@@ -158,19 +208,18 @@ export default function App() {
   const handleSampleSelected = async (sampleType) => {
     const filename = sampleType === 'safe' ? 'safe-sample.json' : 'risky-sample.json';
     try {
-      setIsLoading(true);
-      setLoadingStep(`Loading synthetic ${sampleType} test fixture...`);
+      setIsValidating(true);
       const res = await fetch(`/samples/${filename}`);
       if (!res.ok) throw new Error(`Could not load sample fixture '${filename}'`);
       const blob = await res.blob();
       const file = new File([blob], filename, { type: 'application/json' });
-      await handleUpload(file);
+      await handleFileSelected(file);
     } catch (err) {
       setError({
         code: 'FIXTURE_LOAD_ERROR',
         message: err.message
       });
-      setIsLoading(false);
+      setIsValidating(false);
     }
   };
 
@@ -179,6 +228,9 @@ export default function App() {
     setError(null);
     setSelectedFinding(null);
     setSelectedNodeId(null);
+    setValidationResult(null);
+    setPendingFile(null);
+    setIsValidationModalOpen(false);
     setSeverityFilter('all');
     setSearchQuery('');
     setViewMode('split');
@@ -252,8 +304,8 @@ export default function App() {
         {/* Upload Dropzone (visible when not viewing results) */}
         {!scanResult && !isLoading && !error && (
           <UploadDropzone
-            onFileSelected={handleUpload}
-            isLoading={isLoading}
+            onFileSelected={handleFileSelected}
+            isLoading={isLoading || isValidating}
             onSampleSelected={handleSampleSelected}
           />
         )}
@@ -323,6 +375,23 @@ export default function App() {
                         <span className="meta-info-label">Scan ID:</span>
                         <span className="meta-info-value">{scanResult.scanId}</span>
                       </div>
+
+                      {scanResult.validation && (
+                        <button
+                          type="button"
+                          className={`meta-info-badge precheck-badge ${scanResult.validation.isValid ? (scanResult.validation.summary?.warnings > 0 ? 'warning' : 'clean') : 'error'}`}
+                          onClick={() => setIsValidationModalOpen(true)}
+                          title="Click to view Workflow Validation Pre-check Summary"
+                          aria-label="Workflow Validation Pre-check Report"
+                        >
+                          <span className="meta-info-label">Pre-check:</span>
+                          <strong className="meta-info-value">
+                            {scanResult.validation.isValid
+                              ? `${scanResult.validation.summary?.passed ?? 6}/6 Passed`
+                              : 'Blocked'}
+                          </strong>
+                        </button>
+                      )}
 
                       {renderAiBadge(scanResult.aiStatus)}
 
@@ -413,8 +482,11 @@ export default function App() {
             {/* 2. Risk Summary Cards in Single Row */}
             <SeveritySummary
               summary={scanResult.summary}
+              riskScore={scanResult.riskScore || calculateRiskScore(scanResult.findings)}
+              validation={scanResult.validation || validationResult}
               activeFilter={severityFilter}
               onFilterChange={setSeverityFilter}
+              onOpenValidationModal={() => setIsValidationModalOpen(true)}
             />
 
             {/* Parser Warnings if any */}
@@ -759,6 +831,16 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* 6. Workflow Validation Pre-check Modal */}
+      <ValidationPrecheckModal
+        isOpen={isValidationModalOpen}
+        onClose={() => setIsValidationModalOpen(false)}
+        validationResult={validationResult || scanResult?.validation}
+        onProceedToScan={handleProceedToScan}
+        isScanning={isLoading}
+        workflowFileName={pendingFile?.name || scanResult?.workflow?.name}
+      />
 
       {/* Full-Width Homepage Footer (visible when not viewing results) */}
       {!scanResult && !isLoading && !error && (

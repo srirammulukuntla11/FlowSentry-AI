@@ -5,8 +5,46 @@ import { parseWorkflowJson } from '../workflow/parser.js';
 import { normalizeWorkflowGraph } from '../workflow/graph.js';
 import { runSecurityScan } from '../security/scanner.js';
 import { fetchAiExplanations } from '../services/n8n.service.js';
+import { validateWorkflow } from '../workflow/validator.js';
 
 const router = Router();
+
+/**
+ * POST /api/validate
+ * Pre-check validation step before security analysis.
+ * Evaluates JSON syntax, schema, node identifiers, connection references,
+ * and returns a structured summary of passed checks, non-blocking warnings, and blocking errors.
+ */
+router.post('/validate', handleWorkflowUpload, (req, res) => {
+  try {
+    const fileBuffer = req.file?.buffer;
+    if (!fileBuffer) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'NO_FILE_PROVIDED',
+          message: 'No workflow file was provided in the upload request.'
+        }
+      });
+    }
+
+    const validationResult = validateWorkflow(fileBuffer);
+
+    return res.status(200).json({
+      success: true,
+      ...validationResult
+    });
+  } catch (err) {
+    console.error(`[Validate Handler Error] ${err.name}: ${err.message}`);
+    return res.status(500).json({
+      success: false,
+      error: {
+        code: 'VALIDATION_FAILED',
+        message: 'An internal error occurred during workflow validation.'
+      }
+    });
+  }
+});
 
 /**
  * POST /api/scans
@@ -20,13 +58,16 @@ router.post('/scans', handleWorkflowUpload, async (req, res) => {
   try {
     const fileBuffer = req.file.buffer;
 
+    // 0. Pre-check Validation Audit
+    const validationResult = validateWorkflow(fileBuffer);
+
     // 1. Safe Parse & Validation
     const parsed = parseWorkflowJson(fileBuffer);
 
     // 2. Graph Normalization
     const graphData = normalizeWorkflowGraph(parsed.nodes, parsed.connections);
 
-    // 3. Deterministic Security Rules Execution
+    // 3. Deterministic Security Rules Execution (includes riskScore)
     const scanResult = runSecurityScan(parsed.nodes, graphData);
 
     // 4. n8n + Gemini AI Explanations Orchestration
@@ -61,6 +102,8 @@ router.post('/scans', handleWorkflowUpload, async (req, res) => {
         edges: graphData.graphEdges
       },
       summary: scanResult.summary,
+      riskScore: scanResult.riskScore,
+      validation: validationResult,
       findings: augmentedFindings,
       warnings: combinedWarnings,
       aiStatus,

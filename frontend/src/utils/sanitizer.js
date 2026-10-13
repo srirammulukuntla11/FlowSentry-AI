@@ -6,6 +6,8 @@
  * can never enter exported PDF or JSON artifacts.
  */
 
+import { calculateRiskScore } from './riskScore.js';
+
 // Comprehensive secret-matching patterns matching backend definitions
 export const SECRET_PATTERNS = [
   // High-confidence vendor tokens
@@ -212,6 +214,8 @@ export function sanitizeScanData(scanResult, nodeLookup = {}) {
     totalFindings,
     findings,
     aiStatus,
+    riskScore: scanResult.riskScore || (Array.isArray(scanResult.findings) ? calculateRiskScore(scanResult.findings) : null),
+    validation: scanResult.validation || null,
     warnings: Array.isArray(scanResult.warnings) ? scanResult.warnings.map(redactString) : []
   };
 }

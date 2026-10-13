@@ -241,6 +241,19 @@ export function generatePdfReport(scanResult, nodeLookup = {}) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.text('1. Executive Risk Summary', margin, y);
+
+  if (sanitized.riskScore) {
+    const scoreText = `Overall Risk Score: ${sanitized.riskScore.score}/100 (${sanitized.riskScore.level})`;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    const scoreColor = sanitized.riskScore.category === 'high' ? COLORS.severity.high.text
+      : sanitized.riskScore.category === 'medium' ? COLORS.severity.medium.text
+      : sanitized.riskScore.category === 'low' ? COLORS.severity.low.text
+      : COLORS.severity.safe.text;
+    doc.setTextColor(...scoreColor);
+    doc.text(scoreText, margin + contentWidth, y, { align: 'right' });
+  }
+
   y += 5;
 
   // 4 Single-Row Severity Summary Cards

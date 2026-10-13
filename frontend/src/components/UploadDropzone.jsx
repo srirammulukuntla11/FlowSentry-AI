@@ -22,11 +22,7 @@ export default function UploadDropzone({ onFileSelected, isLoading, onSampleSele
       return;
     }
 
-    if (file.size === 0) {
-      setClientError('The selected file is empty.');
-      return;
-    }
-
+    // Pass file (including empty or malformed) to validation pre-check
     onFileSelected(file);
   };
 

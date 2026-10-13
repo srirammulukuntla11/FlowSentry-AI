@@ -52,7 +52,20 @@ export function buildJsonReport(scanResult, nodeLookup = {}) {
       mediumSeverityCount: sanitized.severityCounts.medium,
       lowSeverityCount: sanitized.severityCounts.low,
       infoSeverityCount: sanitized.severityCounts.info,
-      cleanStatus: sanitized.totalFindings === 0
+      cleanStatus: sanitized.totalFindings === 0,
+      riskScore: sanitized.riskScore ? {
+        score: sanitized.riskScore.score,
+        level: sanitized.riskScore.level,
+        category: sanitized.riskScore.category,
+        explanation: sanitized.riskScore.explanation,
+        formula: sanitized.riskScore.formula,
+        disclaimer: sanitized.riskScore.disclaimer
+      } : null,
+      validationPrecheck: sanitized.validation ? {
+        isValid: sanitized.validation.isValid,
+        canProceed: sanitized.validation.canProceed,
+        summary: sanitized.validation.summary
+      } : null
     },
     severityCounts: sanitized.severityCounts,
     findings: sanitized.findings.map((f) => ({

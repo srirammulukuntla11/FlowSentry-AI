@@ -5,6 +5,7 @@ import { credentialReferenceReviewRule } from './rules/credentialReferenceReview
 import { destructiveActionReviewRule } from './rules/destructiveActionReview.rule.js';
 import { unknownNodeCoverageRule } from './rules/unknownNodeCoverage.rule.js';
 import { deepRedact } from './redaction.js';
+import { calculateRiskScore } from './riskScore.js';
 
 export const ALL_RULES = [
   secretLikeValueRule,
@@ -29,7 +30,8 @@ export const ALL_RULES = [
  *     medium: number,
  *     low: number,
  *     info: number
- *   }
+ *   },
+ *   riskScore: object
  * }}
  */
 export function runSecurityScan(nodes = [], graphData = {}) {
@@ -79,8 +81,12 @@ export function runSecurityScan(nodes = [], graphData = {}) {
     }
   }
 
+  // Compute deterministic overall workflow risk score
+  const riskScore = calculateRiskScore(sanitizedFindings);
+
   return {
     findings: sanitizedFindings,
-    summary
+    summary,
+    riskScore
   };
 }

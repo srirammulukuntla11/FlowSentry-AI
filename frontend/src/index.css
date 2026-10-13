@@ -3344,5 +3344,905 @@ body {
   border-color: #3730A3;
 }
 
+/* ========================================================
+   Feature 1 & Feature 2: Overall Workflow Risk Score & Pre-check Modal
+   ======================================================== */
 
+/* --- Severity Summary Wrapper & Risk Score Hero Card --- */
+.severity-summary-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
 
+.risk-score-hero-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.4rem;
+  box-shadow: var(--shadow-resting);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.risk-score-hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--brand-primary);
+  border-top-left-radius: var(--radius-lg);
+  border-bottom-left-radius: var(--radius-lg);
+}
+
+.risk-score-hero-card.level-minimal::before {
+  background: var(--severity-safe);
+}
+
+.risk-score-hero-card.level-low::before {
+  background: var(--severity-low);
+}
+
+.risk-score-hero-card.level-medium::before {
+  background: var(--severity-medium);
+}
+
+.risk-score-hero-card.level-high::before {
+  background: var(--severity-high);
+}
+
+.risk-score-main-group {
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+  flex: 1 1 500px;
+  min-width: 0;
+}
+
+/* Circular SVG Gauge */
+.risk-score-gauge-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.risk-score-svg {
+  width: 80px;
+  height: 80px;
+  transform: rotate(-90deg);
+}
+
+.gauge-track {
+  stroke: var(--border-subtle);
+  opacity: 0.85;
+}
+
+.gauge-progress {
+  transition: stroke-dashoffset 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gauge-progress.level-minimal {
+  stroke: var(--severity-safe);
+}
+
+.gauge-progress.level-low {
+  stroke: var(--severity-low);
+}
+
+.gauge-progress.level-medium {
+  stroke: var(--severity-medium);
+}
+
+.gauge-progress.level-high {
+  stroke: var(--severity-high);
+}
+
+.gauge-text-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.gauge-score-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+.gauge-score-scale {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  line-height: 1;
+  margin-top: 2px;
+}
+
+/* Details Group */
+.risk-score-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.risk-score-top-line {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.risk-score-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.risk-score-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.02em;
+}
+
+.level-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.risk-score-level-badge.badge-minimal {
+  background: var(--severity-safe-bg);
+  color: var(--severity-safe);
+  border: 1px solid var(--severity-safe-border);
+}
+
+.risk-score-level-badge.badge-low {
+  background: var(--severity-low-bg);
+  color: var(--severity-low);
+  border: 1px solid var(--severity-low-border);
+}
+
+.risk-score-level-badge.badge-medium {
+  background: var(--severity-medium-bg);
+  color: var(--severity-medium);
+  border: 1px solid var(--severity-medium-border);
+}
+
+.risk-score-level-badge.badge-high {
+  background: var(--severity-high-bg);
+  color: var(--severity-high);
+  border: 1px solid var(--severity-high-border);
+}
+
+.risk-score-explanation-text {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0.15rem 0 0.35rem;
+}
+
+.risk-score-footnotes {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.formula-tooltip-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--brand-primary);
+  background: var(--brand-blue-bg);
+  border: 1px solid rgba(81, 69, 229, 0.2);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  cursor: help;
+}
+
+.disclaimer-chip {
+  font-size: 0.72rem;
+  color: var(--text-disabled);
+  font-style: italic;
+}
+
+/* Pre-check Audit Link Button in Hero */
+.risk-score-precheck-cta {
+  flex-shrink: 0;
+}
+
+.btn-open-precheck-audit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all var(--transition-fast);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-standard);
+  color: var(--text-primary);
+}
+
+.btn-open-precheck-audit:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+.btn-open-precheck-audit.audit-clean {
+  background: var(--severity-safe-bg);
+  border-color: var(--severity-safe-border);
+  color: var(--severity-safe);
+}
+
+.btn-open-precheck-audit.audit-warning {
+  background: var(--severity-medium-bg);
+  border-color: var(--severity-medium-border);
+  color: var(--severity-medium);
+}
+
+.btn-open-precheck-audit.audit-error {
+  background: var(--severity-high-bg);
+  border-color: var(--severity-high-border);
+  color: var(--severity-high);
+}
+
+.audit-cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audit-cta-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.audit-cta-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.85;
+}
+
+.audit-cta-status {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* --- Validation Pre-check Modal Styling --- */
+.precheck-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1.25rem;
+  animation: fadeIn 0.18s ease-out;
+}
+
+.precheck-modal-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-xl, 14px);
+  width: 100%;
+  max-width: 680px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.97) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.precheck-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid var(--border-standard);
+  background: var(--bg-surface);
+}
+
+.precheck-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.precheck-header-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-blue-bg);
+  color: var(--brand-primary);
+  border: 1px solid rgba(81, 69, 229, 0.2);
+  flex-shrink: 0;
+}
+
+.precheck-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--brand-primary);
+}
+
+.precheck-modal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.btn-precheck-close {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.btn-precheck-close:hover {
+  background: var(--bg-inset);
+  color: var(--text-primary);
+  border-color: var(--border-standard);
+}
+
+/* Status Banner inside Modal */
+.precheck-status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.95rem 1.4rem;
+  border-bottom: 1px solid var(--border-standard);
+}
+
+.precheck-status-banner.status-clean {
+  background: var(--severity-safe-bg);
+  border-color: var(--severity-safe-border);
+  color: var(--severity-safe);
+}
+
+.precheck-status-banner.status-warning {
+  background: var(--severity-medium-bg);
+  border-color: var(--severity-medium-border);
+  color: var(--severity-medium);
+}
+
+.precheck-status-banner.status-error {
+  background: var(--severity-high-bg);
+  border-color: var(--severity-high-border);
+  color: var(--severity-high);
+}
+
+.status-banner-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.status-banner-content {
+  flex: 1;
+}
+
+.status-banner-heading {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.status-banner-desc {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  margin: 0;
+  opacity: 0.92;
+}
+
+/* Metadata Bar */
+.precheck-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1.4rem;
+  background: var(--bg-inset);
+  border-bottom: 1px solid var(--border-standard);
+  font-size: 0.78rem;
+  flex-wrap: wrap;
+}
+
+.precheck-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.precheck-meta-item .meta-label {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.precheck-meta-item .meta-value {
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.precheck-summary-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pill-metric {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.pill-metric .metric-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pill-metric.passed {
+  background: var(--severity-safe-bg);
+  color: var(--severity-safe);
+  border: 1px solid var(--severity-safe-border);
+}
+
+.pill-metric.warning {
+  background: var(--severity-medium-bg);
+  color: var(--severity-medium);
+  border: 1px solid var(--severity-medium-border);
+}
+
+.pill-metric.error {
+  background: var(--severity-high-bg);
+  color: var(--severity-high);
+  border: 1px solid var(--severity-high-border);
+}
+
+/* Checklist Section */
+.precheck-checks-list {
+  padding: 1rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.checks-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.checks-subtitle {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.checks-scrollable-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+  max-height: 380px;
+}
+
+.check-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.95rem;
+  transition: all var(--transition-fast);
+}
+
+.check-card.status-passed {
+  border-left: 3px solid var(--severity-safe);
+}
+
+.check-card.status-warning {
+  border-left: 3px solid var(--severity-medium);
+  background: var(--severity-medium-bg);
+}
+
+.check-card.status-error {
+  border-left: 3px solid var(--severity-high);
+  background: var(--severity-high-bg);
+}
+
+.check-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.check-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.check-icon-wrapper {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.check-icon-wrapper.passed {
+  background: var(--severity-safe-bg);
+  color: var(--severity-safe);
+}
+
+.check-icon-wrapper.warning {
+  background: var(--severity-medium-bg);
+  color: var(--severity-medium);
+}
+
+.check-icon-wrapper.error {
+  background: var(--severity-high-bg);
+  color: var(--severity-high);
+}
+
+.check-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.check-status-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.03em;
+}
+
+.check-status-pill.pill-passed {
+  background: var(--severity-safe-bg);
+  color: var(--severity-safe);
+  border: 1px solid var(--severity-safe-border);
+}
+
+.check-status-pill.pill-warning {
+  background: var(--severity-medium-bg);
+  color: var(--severity-medium);
+  border: 1px solid var(--severity-medium-border);
+}
+
+.check-status-pill.pill-error {
+  background: var(--severity-high-bg);
+  color: var(--severity-high);
+  border: 1px solid var(--severity-high-border);
+}
+
+.check-message {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0.35rem 0 0;
+}
+
+.check-details-box {
+  margin-top: 0.45rem;
+  padding: 0.4rem 0.65rem;
+  background: var(--bg-inset);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.check-details-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.check-affected-items {
+  margin-top: 0.5rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed var(--border-standard);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.affected-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.affected-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.affected-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-standard);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+
+/* Modal Actions Footer */
+.precheck-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.95rem 1.4rem;
+  border-top: 1px solid var(--border-standard);
+  background: var(--bg-surface);
+  flex-wrap: wrap;
+}
+
+.footer-left-info .footer-note {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.footer-actions-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.btn-precheck-secondary {
+  height: 36px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-standard);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0 0.95rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-precheck-secondary:hover:not(:disabled) {
+  background: var(--bg-inset);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.btn-precheck-proceed {
+  height: 36px;
+  background: var(--brand-primary);
+  border: 1px solid var(--brand-primary);
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0 1.15rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(81, 69, 229, 0.3);
+}
+
+.btn-precheck-proceed:hover:not(:disabled) {
+  background: var(--brand-primary-hover);
+  border-color: var(--brand-primary-hover);
+  transform: translateY(-0.5px);
+}
+
+.btn-precheck-proceed:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- Dark Mode Overrides for Feature 1 & Feature 2 --- */
+[data-theme="dark"] .risk-score-hero-card {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .gauge-track {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .formula-tooltip-chip {
+  background: #1E1B4B;
+  color: #A5B4FC;
+  border-color: #3730A3;
+}
+
+[data-theme="dark"] .precheck-modal-card {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .precheck-modal-header,
+[data-theme="dark"] .precheck-modal-footer {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .precheck-meta-bar {
+  background: var(--bg-inset);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .check-card {
+  background: var(--bg-surface);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .check-card.status-warning {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+[data-theme="dark"] .check-card.status-error {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+[data-theme="dark"] .check-details-box {
+  background: var(--bg-inset);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .affected-chip {
+  background: var(--bg-surface);
+  border-color: var(--border-standard);
+}
+
+[data-theme="dark"] .btn-precheck-secondary {
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .btn-precheck-secondary:hover:not(:disabled) {
+  background: var(--bg-inset);
+  color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  .risk-score-hero-card {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .risk-score-main-group {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .risk-score-details {
+    align-items: center;
+  }
+
+  .risk-score-top-line,
+  .risk-score-footnotes {
+    justify-content: center;
+  }
+
+  .risk-score-precheck-cta {
+    width: 100%;
+  }
+
+  .btn-open-precheck-audit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .precheck-modal-card {
+    max-height: 94vh;
+  }
+
+  .precheck-meta-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .precheck-modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .footer-actions-group {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-precheck-secondary,
+  .btn-precheck-proceed {
+    width: 100%;
+    justify-content: center;
+  }
+}
