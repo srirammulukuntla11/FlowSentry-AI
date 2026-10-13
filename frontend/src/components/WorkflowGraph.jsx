@@ -55,7 +55,7 @@ export default function WorkflowGraph({
         target: edge.target,
         animated: isConnectedToHighlight,
         style: {
-          stroke: isConnectedToHighlight ? '#C74747' : '#4F8277',
+          stroke: isConnectedToHighlight ? '#EF4444' : '#94A3B8',
           strokeWidth: isConnectedToHighlight ? 2 : 1.5,
           transition: 'stroke 0.2s ease, stroke-width 0.2s ease'
         }
@@ -75,15 +75,15 @@ export default function WorkflowGraph({
         minZoom={0.2}
         maxZoom={2}
       >
-        <Background color="#D9DEE5" gap={18} size={1} />
+        <Background color="var(--border-standard, #E2E8F0)" gap={18} size={1} />
         <Controls
           className="flow-controls-custom"
           showInteractive={false}
         />
         <MiniMap
           className="flow-minimap-custom"
-          nodeColor={(n) => (highlightedSet.has(n.id) ? '#C74747' : '#9AAEBD')}
-          maskColor="var(--minimap-mask, rgba(236, 234, 228, 0.75))"
+          nodeColor={(n) => (highlightedSet.has(n.id) ? '#EF4444' : '#94A3B8')}
+          maskColor="var(--minimap-mask, rgba(241, 245, 249, 0.75))"
         />
       </ReactFlow>
     </div>

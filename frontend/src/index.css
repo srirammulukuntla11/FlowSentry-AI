@@ -9,82 +9,84 @@
   /* ======================================================
      1. Backgrounds & Surface Hierarchy
      ====================================================== */
-  --bg-canvas: #F5F3EE;              /* Main page background: warm ivory */
-  --bg-page: #F5F3EE;
+  --bg-canvas: #F7F9FC;              /* Main page background: clean light gray / off-white */
+  --bg-page: #F7F9FC;
   --bg-panel: #FFFFFF;               /* Primary cards & panels: clean white */
   --bg-surface: #FFFFFF;
   --bg-card: #FFFFFF;
-  --bg-secondary: #ECEAE4;           /* Secondary surfaces: warm light grey */
-  --bg-section-alt: #E7EAE8;         /* Alternate section background: soft neutral grey-green */
-  --bg-dark-panel: #202C46;          /* Dark feature panels: deep indigo */
+  --bg-secondary: #F1F5F9;           /* Secondary surfaces: slate 100 */
+  --bg-section-alt: #F8FAFC;         /* Alternate section background: slate 50 */
+  --bg-dark-panel: #111827;          /* Deep navy */
   --bg-elevated: #FFFFFF;            /* Elevated cards */
-  --bg-hover: #F0EEE9;               /* Subtle hover surface */
-  --bg-inset: #F7F6F2;               /* Input & inset surface */
-  --bg-evidence: #ECEAE4;            /* Code evidence inset */
+  --bg-hover: #F8FAFC;               /* Subtle hover surface */
+  --bg-inset: #F8FAFC;               /* Input & inset surface */
+  --bg-evidence: #F8FAFC;            /* Code evidence inset */
   --bg-upload: #FFFFFF;              /* Upload card */
   --bg-navbar: #FFFFFF;              /* Clean white navbar */
-  --bg-footer: #ECEAE4;              /* Full-width footer surface */
+  --bg-footer: #F8FAFC;              /* Full-width footer surface */
   --bg-workspace: #FFFFFF;           /* Graph canvas background */
-  --minimap-mask: rgba(236, 234, 228, 0.75); /* React Flow minimap non-visible mask */
+  --minimap-mask: rgba(241, 245, 249, 0.75);
 
   /* ======================================================
-     2. Brand Colors
+     2. Brand Colors (Purple-Indigo SaaS Palette)
      ====================================================== */
-  --brand-primary: #344766;          /* Primary indigo */
-  --brand-deep: #202C46;             /* Deep indigo */
-  --brand-teal: #4F8277;             /* Muted teal */
-  --brand-teal-bg: #DDEBE6;          /* Soft teal background */
-  --brand-blue-bg: #E7EDF5;          /* Pale blue background */
+  --brand-primary: #5145E5;          /* Purple-indigo primary action */
+  --brand-primary-hover: #4338CA;    /* Darker purple-indigo hover */
+  --brand-deep: #111827;             /* Main headings: deep navy */
+  --brand-teal: #5145E5;             /* Brand accent */
+  --brand-teal-bg: #EEF2FF;          /* Soft purple-indigo background */
+  --brand-blue-bg: #EEF2FF;          /* Pale indigo background */
+  --brand-purple-bg: #EEF2FF;
 
   /* Interactive aliases */
-  --accent-primary: #202C46;         /* Primary deep indigo action */
-  --accent-primary-hover: #344766;   /* Indigo hover */
-  --accent-teal: #4F8277;            /* Muted teal */
-  --accent-teal-bg: #DDEBE6;         /* Soft teal background */
-  --color-brand-shield-bg: #DDEBE6;
+  --accent-primary: #5145E5;         /* Purple-indigo primary action */
+  --accent-primary-hover: #4338CA;   /* Hover state */
+  --accent-teal: #5145E5;
+  --accent-teal-bg: #EEF2FF;
+  --color-brand-shield-bg: #EEF2FF;
 
   /* ======================================================
      3. Typography Colors
      ====================================================== */
-  --text-primary: #222B3A;           /* Primary text */
-  --text-secondary: #536071;         /* Secondary text */
-  --text-muted: #778191;             /* Muted metadata */
-  --text-disabled: #9AAEBD;          /* Disabled text */
-  --text-dim: #9AAEBD;               /* Subtle dividers */
-  --text-on-dark: #F7F8FA;           /* Text on dark backgrounds */
+  --text-primary: #111827;           /* Main headings & text: deep navy */
+  --text-secondary: #64748B;         /* Body & secondary text: muted slate gray */
+  --text-muted: #64748B;             /* Muted metadata */
+  --text-disabled: #94A3B8;          /* Disabled text */
+  --text-dim: #CBD5E1;               /* Subtle dividers */
+  --text-on-dark: #FFFFFF;           /* Text on dark backgrounds */
 
   /* ======================================================
      4. Borders & Focus Tokens
      ====================================================== */
-  --border-standard: #D9DEE5;        /* Default border */
-  --border-main: #D9DEE5;
-  --border-subtle: #E8E9E6;          /* Subtle division border */
-  --border-hover: #AAB8C8;           /* Hover border */
-  --border-active: #4F8277;          /* Active selection border */
-  --focus-ring: #6B91A6;             /* Focus ring */
+  --border-standard: #E2E8F0;        /* Subtle blue-gray borders */
+  --border-main: #E2E8F0;
+  --border-subtle: #F1F5F9;          /* Subtle division border */
+  --border-hover: #CBD5E1;           /* Hover border */
+  --border-active: #5145E5;          /* Active selection border */
+  --focus-ring: #5145E5;             /* Focus ring */
 
   /* ======================================================
      5. Security Severity Colors
      ====================================================== */
-  --severity-high: #C74747;          /* High risk */
-  --severity-high-bg: #FBEAEA;       /* Pale red background */
-  --severity-high-border: #F3C7C7;
+  --severity-high: #EF4444;          /* High risk red */
+  --severity-high-bg: #FEF2F2;       /* Pale red background */
+  --severity-high-border: #FECACA;
 
-  --severity-medium: #B77924;        /* Medium risk */
-  --severity-medium-bg: #FDF4E7;     /* Pale amber background */
-  --severity-medium-border: #F6DFBA;
+  --severity-medium: #F59E0B;        /* Medium risk amber */
+  --severity-medium-bg: #FFFBEB;     /* Pale amber background */
+  --severity-medium-border: #FDE68A;
 
-  --severity-low: #327D75;           /* Low risk */
-  --severity-low-bg: #E6F4F2;        /* Pale teal background */
-  --severity-low-border: #BDDFDA;
+  --severity-low: #0284C7;           /* Low risk sky/blue */
+  --severity-low-bg: #F0F9FF;        /* Pale sky background */
+  --severity-low-border: #BAE6FD;
 
-  --severity-info: #6D61A8;          /* Informational */
-  --severity-info-bg: #F1EFF9;       /* Pale violet background */
-  --severity-info-border: #D8D2EE;
+  --severity-info: #6366F1;          /* Informational indigo */
+  --severity-info-bg: #EEF2FF;       /* Pale violet background */
+  --severity-info-border: #C7D2FE;
 
-  --severity-safe: #367A53;          /* Safe / clean status */
-  --severity-safe-bg: #EBF5EF;       /* Pale green background */
-  --severity-safe-border: #C5E3D0;
+  --severity-safe: #10B981;          /* Safe / clean emerald */
+  --severity-safe-bg: #ECFDF5;       /* Pale emerald background */
+  --severity-safe-border: #A7F3D0;
 
   /* ======================================================
      6. Font Families & Typography Hierarchy Tokens
@@ -93,39 +95,39 @@
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Type Scale Tokens */
-  --text-size-display: clamp(2rem, 3.2vw, 2.5rem); /* 32-40px desktop */
-  --text-size-page-title: 1.25rem;                 /* 20px */
-  --text-size-section-heading: 1rem;               /* 16px */
-  --text-size-card-title: 0.95rem;                 /* 15.2px */
-  --text-size-body: 0.9rem;                        /* 14.4px */
-  --text-size-desc: 0.85rem;                       /* 13.6px */
-  --text-size-label: 0.75rem;                      /* 12px */
-  --text-size-badge: 0.7rem;                       /* 11.2px */
-  --text-size-code: 0.78rem;                       /* 12.5px */
+  --text-size-display: clamp(1.85rem, 2.8vw, 2.25rem); /* 30-36px desktop */
+  --text-size-page-title: 1.15rem;                     /* 18.4px */
+  --text-size-section-heading: 0.95rem;                /* 15.2px */
+  --text-size-card-title: 0.925rem;                    /* 14.8px */
+  --text-size-body: 0.875rem;                          /* 14px */
+  --text-size-desc: 0.825rem;                          /* 13.2px */
+  --text-size-label: 0.75rem;                          /* 12px */
+  --text-size-badge: 0.7rem;                           /* 11.2px */
+  --text-size-code: 0.78rem;                           /* 12.5px */
 
   /* Line Heights */
-  --line-height-tight: 1.22;
+  --line-height-tight: 1.25;
   --line-height-snug: 1.35;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.6;
 
   /* ======================================================
-     7. Corner Radii Scale
+     7. Corner Radii Scale (Medium Rounded)
      ====================================================== */
   --radius-sm: 6px;                  /* Compact controls, small badges */
   --radius-md: 8px;                  /* Buttons, inputs, search */
   --radius-lg: 12px;                 /* Standard cards, summary cards */
   --radius-xl: 16px;                 /* Large panels, upload card */
-  --radius-pill: 999px;              /* Filter chips, pill badges */
+  --radius-pill: 9999px;             /* Filter chips, pill badges */
 
   /* ======================================================
-     8. Soft Natural Shadows (No Colored Glows)
+     8. Soft Refined SaaS Shadows
      ====================================================== */
-  --shadow-resting: 0 1px 3px rgba(34, 43, 58, 0.04);
-  --shadow-card: 0 1px 3px rgba(34, 43, 58, 0.05), 0 1px 2px rgba(34, 43, 58, 0.03);
-  --shadow-elevated: 0 3px 8px rgba(34, 43, 58, 0.06), 0 1px 3px rgba(34, 43, 58, 0.03);
-  --shadow-hover: 0 4px 12px rgba(34, 43, 58, 0.08), 0 1px 3px rgba(34, 43, 58, 0.04);
-  --shadow-modal: 0 8px 24px rgba(34, 43, 58, 0.12), 0 2px 6px rgba(34, 43, 58, 0.04);
+  --shadow-resting: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 6px 12px -2px rgba(0, 0, 0, 0.07), 0 3px 6px -3px rgba(0, 0, 0, 0.05);
+  --shadow-modal: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 
   /* Legacy shadow aliases for compatibility */
   --shadow-sm: var(--shadow-resting);
@@ -133,7 +135,7 @@
   --shadow-lg: var(--shadow-modal);
 
   /* Transitions */
-  --transition-fast: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -307,9 +309,9 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--brand-primary);
-  background: var(--brand-blue-bg);
-  border: 1px solid #D2DFEE;
-  padding: 0.24rem 0.75rem;
+  background: var(--brand-purple-bg);
+  border: 1px solid #C7D2FE;
+  padding: 0.25rem 0.75rem;
   border-radius: var(--radius-pill);
   text-transform: uppercase;
   margin-bottom: 0.85rem;
@@ -319,7 +321,7 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--brand-teal);
+  background: var(--brand-primary);
 }
 
 /* 2. Main Heading */
@@ -334,12 +336,12 @@ body {
 }
 
 .hero-highlight {
-  color: var(--brand-teal);
+  color: var(--brand-primary);
 }
 
 /* 3. Concise Description */
 .hero-subtext {
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   line-height: var(--line-height-normal);
   color: var(--text-secondary);
   max-width: 580px;
@@ -350,9 +352,9 @@ body {
 .upload-panel {
   width: 100%;
   background: var(--bg-panel);
-  border: 1.5px dashed var(--border-standard);
+  border: 1.5px dashed var(--border-hover);
   border-radius: var(--radius-xl);
-  padding: 1.85rem 1.5rem;
+  padding: 2.25rem 1.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -361,13 +363,13 @@ body {
   cursor: pointer;
   transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
   box-shadow: var(--shadow-resting);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .upload-panel:hover,
 .upload-panel.drag-over {
-  border-color: var(--brand-teal);
-  background: var(--brand-blue-bg);
+  border-color: var(--brand-primary);
+  background: #FAF9FF;
   box-shadow: var(--shadow-elevated);
 }
 
@@ -377,12 +379,12 @@ body {
 }
 
 .upload-icon-wrapper {
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-md);
-  background: var(--brand-teal-bg);
-  border: 1px solid #C4DED5;
-  color: var(--brand-teal);
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-lg);
+  background: var(--brand-purple-bg);
+  border: 1px solid #C7D2FE;
+  color: var(--brand-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -391,7 +393,7 @@ body {
 }
 
 .upload-panel:hover .upload-icon-wrapper {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .upload-title {
@@ -405,28 +407,28 @@ body {
 .upload-instructions {
   font-size: var(--text-size-desc);
   color: var(--text-secondary);
-  margin-bottom: 1rem;
+  margin-bottom: 1.15rem;
 }
 
 .btn-upload-action {
-  background: var(--brand-deep);
+  background: var(--brand-primary);
   color: #FFFFFF;
   border: none;
   font-family: var(--font-sans);
   font-size: var(--text-size-body);
   font-weight: 500;
-  padding: 0.58rem 1.45rem;
+  padding: 0.6rem 1.5rem;
   border-radius: var(--radius-md);
   cursor: pointer;
-  box-shadow: var(--shadow-resting);
+  box-shadow: 0 1px 2px rgba(81, 69, 229, 0.2);
   transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   margin-bottom: 0.75rem;
 }
 
 .btn-upload-action:hover {
-  background: var(--brand-primary);
+  background: var(--brand-primary-hover);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-elevated);
+  box-shadow: 0 4px 8px rgba(81, 69, 229, 0.25);
 }
 
 .btn-upload-action:active {
@@ -1083,8 +1085,8 @@ body {
 }
 
 .filter-pill.active {
-  background: var(--brand-deep);
-  border-color: var(--brand-deep);
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
   color: #FFFFFF;
   font-weight: 600;
 }
@@ -1125,16 +1127,16 @@ body {
   background: var(--bg-inset);
   border: 1px solid var(--border-standard);
   border-radius: var(--radius-md);
-  padding: 2px;
+  padding: 3px;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .btn-view-mode {
-  height: 30px;
+  height: 28px;
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   color: var(--text-secondary);
   font-family: var(--font-sans);
   font-size: var(--text-size-label);
@@ -1145,7 +1147,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .btn-view-mode:hover {
@@ -1153,9 +1155,11 @@ body {
 }
 
 .btn-view-mode.active {
-  background: var(--brand-deep);
-  color: #FFFFFF;
+  background: var(--bg-panel);
+  border-color: var(--border-standard);
+  color: var(--brand-primary);
   font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .btn-fullscreen-trigger {
@@ -2035,22 +2039,23 @@ body {
 }
 
 .btn-primary {
-  background: var(--brand-deep);
+  background: var(--brand-primary);
   color: #FFFFFF;
   border: none;
   font-family: var(--font-sans);
   font-size: var(--text-size-body);
   font-weight: 500;
-  padding: 0.58rem 1.4rem;
+  padding: 0.6rem 1.4rem;
   border-radius: var(--radius-md);
   cursor: pointer;
-  box-shadow: var(--shadow-resting);
-  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 1px 2px rgba(81, 69, 229, 0.2);
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .btn-primary:hover {
-  background: var(--brand-primary);
-  box-shadow: var(--shadow-card);
+  background: var(--brand-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(81, 69, 229, 0.25);
 }
 
 .btn-primary:focus-visible {
@@ -2127,37 +2132,39 @@ body {
   color-scheme: dark;
 
   /* 1. Backgrounds & Surface Hierarchy */
-  --bg-canvas: #0F172A;
-  --bg-page: #0F172A;
-  --bg-panel: #1E293B;
-  --bg-surface: #1E293B;
-  --bg-card: #1E293B;
-  --bg-secondary: #162032;
-  --bg-section-alt: #131C2E;
-  --bg-dark-panel: #0B1120;
-  --bg-elevated: #243048;
-  --bg-hover: #26354D;
-  --bg-inset: #131C2E;
-  --bg-evidence: #0B1120;
-  --bg-upload: #1E293B;
-  --bg-navbar: #162032;
-  --bg-footer: #162032;
-  --bg-workspace: #0F172A;
-  --minimap-mask: rgba(15, 23, 42, 0.75);
+  --bg-canvas: #0B0F19;
+  --bg-page: #0B0F19;
+  --bg-panel: #111827;
+  --bg-surface: #111827;
+  --bg-card: #111827;
+  --bg-secondary: #1E293B;
+  --bg-section-alt: #0F172A;
+  --bg-dark-panel: #080D1A;
+  --bg-elevated: #1E293B;
+  --bg-hover: #1E293B;
+  --bg-inset: #0F172A;
+  --bg-evidence: #080D1A;
+  --bg-upload: #111827;
+  --bg-navbar: #111827;
+  --bg-footer: #0B0F19;
+  --bg-workspace: #0B0F19;
+  --minimap-mask: rgba(11, 15, 25, 0.8);
 
   /* 2. Brand Colors */
-  --brand-primary: #38BDF8;
-  --brand-deep: #F1F5F9;
-  --brand-teal: #2DD4BF;
-  --brand-teal-bg: #132D2F;
-  --brand-blue-bg: #17283C;
+  --brand-primary: #6366F1;
+  --brand-primary-hover: #4F46E5;
+  --brand-deep: #F8FAFC;
+  --brand-teal: #6366F1;
+  --brand-teal-bg: #1E1B4B;
+  --brand-blue-bg: #1E1B4B;
+  --brand-purple-bg: #1E1B4B;
 
   /* Interactive aliases */
-  --accent-primary: #38BDF8;
-  --accent-primary-hover: #0EA5E9;
-  --accent-teal: #2DD4BF;
-  --accent-teal-bg: #132D2F;
-  --color-brand-shield-bg: #132D2F;
+  --accent-primary: #6366F1;
+  --accent-primary-hover: #4F46E5;
+  --accent-teal: #6366F1;
+  --accent-teal-bg: #1E1B4B;
+  --color-brand-shield-bg: #1E1B4B;
 
   /* 3. Typography Colors */
   --text-primary: #F8FAFC;
@@ -2168,40 +2175,40 @@ body {
   --text-on-dark: #F8FAFC;
 
   /* 4. Borders & Focus Tokens */
-  --border-standard: #334155;
-  --border-main: #334155;
-  --border-subtle: #243247;
-  --border-hover: #475569;
-  --border-active: #38BDF8;
-  --focus-ring: #38BDF8;
+  --border-standard: #1E293B;
+  --border-main: #1E293B;
+  --border-subtle: #1E293B;
+  --border-hover: #334155;
+  --border-active: #6366F1;
+  --focus-ring: #6366F1;
 
   /* 5. Security Severity Colors */
   --severity-high: #F87171;
-  --severity-high-bg: #3B181E;
-  --severity-high-border: #62232B;
+  --severity-high-bg: #371418;
+  --severity-high-border: #5C1E26;
 
   --severity-medium: #FBBF24;
-  --severity-medium-bg: #382910;
-  --severity-medium-border: #5B4317;
+  --severity-medium-bg: #33240D;
+  --severity-medium-border: #563C15;
 
-  --severity-low: #34D399;
-  --severity-low-bg: #102F28;
-  --severity-low-border: #1C4D41;
+  --severity-low: #38BDF8;
+  --severity-low-bg: #0C283E;
+  --severity-low-border: #134267;
 
   --severity-info: #A78BFA;
-  --severity-info-bg: #2B1D4B;
-  --severity-info-border: #46307B;
+  --severity-info-bg: #231B45;
+  --severity-info-border: #3B2E70;
 
   --severity-safe: #34D399;
-  --severity-safe-bg: #102F28;
-  --severity-safe-border: #1C4D41;
+  --severity-safe-bg: #0B2C22;
+  --severity-safe-border: #134B3B;
 
   /* Shadows for Dark Mode */
-  --shadow-resting: 0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.4);
-  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.5);
-  --shadow-modal: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --shadow-resting: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.45);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.55);
+  --shadow-modal: 0 10px 30px rgba(0, 0, 0, 0.65);
 }
 
 /* ========================================================
@@ -2210,22 +2217,23 @@ body {
 
 /* View Mode Toggle Controls (Split, Graph Focus, Findings Focus) */
 [data-theme="dark"] .view-mode-toggle {
-  background: #111C2E;
-  border-color: #334155;
+  background: var(--bg-inset);
+  border-color: var(--border-standard);
 }
 
 [data-theme="dark"] .btn-view-mode {
-  color: #94A3B8;
+  color: var(--text-secondary);
 }
 
 [data-theme="dark"] .btn-view-mode:hover {
-  color: #F8FAFC;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 [data-theme="dark"] .btn-view-mode.active {
-  background: #0284C7;
-  color: #FFFFFF;
+  background: var(--bg-panel);
+  border-color: var(--border-hover);
+  color: var(--brand-primary);
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
@@ -2243,8 +2251,8 @@ body {
 }
 
 [data-theme="dark"] .filter-pill.active {
-  background: #0284C7;
-  border-color: #0284C7;
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
   color: #FFFFFF;
   font-weight: 600;
 }
@@ -2278,14 +2286,15 @@ body {
 /* Buttons */
 [data-theme="dark"] .btn-upload-action,
 [data-theme="dark"] .btn-primary {
-  background: #0284C7;
+  background: var(--brand-primary);
   color: #FFFFFF;
-  border-color: #0369A1;
+  border-color: var(--brand-primary);
 }
 
 [data-theme="dark"] .btn-upload-action:hover,
 [data-theme="dark"] .btn-primary:hover {
-  background: #0369A1;
+  background: var(--brand-primary-hover);
+  border-color: var(--brand-primary-hover);
 }
 
 [data-theme="dark"] .btn-scan-another,
@@ -2323,9 +2332,9 @@ body {
 }
 
 [data-theme="dark"] .selected-indicator {
-  border-color: #1C4D41;
-  color: #34D399;
-  background: #102F28;
+  border-color: #3730A3;
+  color: #A5B4FC;
+  background: #1E1B4B;
 }
 
 /* Rule ID & Chips */
@@ -2418,7 +2427,7 @@ body {
 }
 
 [data-theme="dark"] .custom-flow-node:hover {
-  border-color: #38BDF8;
+  border-color: var(--brand-primary);
 }
 
 [data-theme="dark"] .custom-flow-node.highlighted {
@@ -2431,7 +2440,7 @@ body {
 }
 
 [data-theme="dark"] .node-type-label {
-  color: #2DD4BF;
+  color: #A5B4FC;
 }
 
 [data-theme="dark"] .node-badge {
@@ -2441,14 +2450,14 @@ body {
 }
 
 [data-theme="dark"] .node-icon-wrapper {
-  background: #131C2E;
-  border-color: #243247;
+  background: #1E1B4B;
+  border-color: #3730A3;
 }
 
 [data-theme="dark"] .node-cred-chip {
-  background: #17283C;
-  color: #38BDF8;
-  border-color: #243247;
+  background: #1E1B4B;
+  color: #A5B4FC;
+  border-color: #3730A3;
 }
 
 /* Graph Canvas & Controls */
@@ -2529,32 +2538,35 @@ body {
 }
 
 .btn-export-report {
-  height: 32px;
-  background: var(--bg-inset);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-sm);
-  color: var(--brand-primary);
+  height: 34px;
+  background: var(--brand-primary);
+  border: 1px solid var(--brand-primary);
+  border-radius: var(--radius-md);
+  color: #FFFFFF;
   font-family: var(--font-sans);
-  font-size: var(--text-size-label);
-  font-weight: 600;
-  padding: 0 0.75rem;
+  font-size: var(--text-size-desc);
+  font-weight: 500;
+  padding: 0 0.85rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   cursor: pointer;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 1px 2px rgba(81, 69, 229, 0.2);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   white-space: nowrap;
 }
 
 .btn-export-report:hover {
-  background: var(--bg-secondary);
-  border-color: var(--border-hover);
+  background: var(--brand-primary-hover);
+  border-color: var(--brand-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(81, 69, 229, 0.25);
 }
 
 .btn-export-report.active {
-  background: var(--brand-blue-bg);
-  border-color: var(--border-active);
-  color: var(--brand-primary);
+  background: var(--brand-primary-hover);
+  border-color: var(--brand-primary-hover);
+  color: #FFFFFF;
 }
 
 .btn-export-report:focus-visible {
@@ -2564,7 +2576,7 @@ body {
 
 .export-chevron {
   transition: transform var(--transition-fast);
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .export-chevron.open {
@@ -2721,21 +2733,21 @@ body {
 
 /* Export Dropdown Dark Mode Overrides */
 [data-theme="dark"] .btn-export-report {
-  background: var(--bg-panel);
-  border-color: var(--border-standard);
-  color: var(--brand-primary);
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #FFFFFF;
 }
 
 [data-theme="dark"] .btn-export-report:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-hover);
-  color: #F8FAFC;
+  background: var(--brand-primary-hover);
+  border-color: var(--brand-primary-hover);
+  color: #FFFFFF;
 }
 
 [data-theme="dark"] .btn-export-report.active {
-  background: var(--bg-hover);
-  border-color: var(--border-active);
-  color: #F8FAFC;
+  background: var(--brand-primary-hover);
+  border-color: var(--brand-primary-hover);
+  color: #FFFFFF;
 }
 
 [data-theme="dark"] .export-dropdown-menu {
@@ -2744,9 +2756,9 @@ body {
 }
 
 [data-theme="dark"] .export-item-icon.json {
-  background: #17283C;
-  color: #38BDF8;
-  border-color: #243247;
+  background: #1E1B4B;
+  color: #A5B4FC;
+  border-color: #3730A3;
 }
 
 
